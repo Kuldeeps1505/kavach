@@ -1,0 +1,9 @@
+[project]
+name = "kavach"
+version = "0.1.0"
+description = "Linux runtime telemetry proof of concept"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.unittest]
+start-directory = "tests"

@@ -1,0 +1,23 @@
+services:
+  kavach:
+    pid: host
+    volumes:
+      - type: bind
+        source: /proc
+        target: /host/proc
+        read_only: true
+        bind:
+          create_host_path: false
+    command:
+      - --watch-dir
+      - /data/watch
+      - --database
+      - /var/lib/kavach/kavach.sqlite3
+      - --proc-root
+      - /host/proc
+      - --interval
+      - "1"
+      - --api-host
+      - 0.0.0.0
+      - --api-port
+      - "8000"

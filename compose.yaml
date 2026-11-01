@@ -1,0 +1,47 @@
+services:
+  kavach:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kavach:local
+    init: true
+    restart: unless-stopped
+    read_only: true
+    user: "10001:10001"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=16m
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - kavach-data:/var/lib/kavach
+      - ./test-data:/data/watch:ro
+    command:
+      - --watch-dir
+      - /data/watch
+      - --database
+      - /var/lib/kavach/kavach.sqlite3
+      - --proc-root
+      - /proc
+      - --interval
+      - "1"
+      - --api-host
+      - 0.0.0.0
+      - --api-port
+      - "8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+
+volumes:
+  kavach-data:
